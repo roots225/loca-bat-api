@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+
+  firstName String?
+  lastName  String?
+
+  email    String @unique
+  password String
+
+  role String
+
+  phone String?
+  address String?
+  avatar String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Agency {
+  id        Int      @id @default(autoincrement())
+  name String
+  mobile String
+  phone String?
+  address String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  owners Employee[]
+  employees Owner[]
+  tenants Tenant[]
+
+  @@map("agencies")
+}
+
+model Owner {
+  user_id Int @unique
+
+  agency_id Int
+  agency Agency @relation(fields: [agency_id], references: [id])
+
+  @@map("owners")
+}
+
+model Employee {
+  user_id Int @unique
+
+  agency_id Int
+  agency Agency @relation(fields: [agency_id], references: [id])
+
+  @@map("employees")
+}
+
+model Tenant {
+  user_id Int @unique
+
+  agency_id Int
+  agency Agency @relation(fields: [agency_id], references: [id])
+
+  @@map("tenants")
+}
+
+model Property {
+  id        Int      @id @default(autoincrement())
+  name String
+  type String
+  description String
+
+  owner_id Int?
+  tenant_id Int?
+  
+  monthly_cost Decimal?
+
+  rent_deposit Int @default(3)
+  rent_advance Int @default(1)
+
+  address String?
+  photo String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("properties")
+}
