@@ -11,19 +11,19 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  firstName String?
-  lastName  String?
+  firstname String?
+  lastname  String?
 
   email    String @unique
   password String
 
   role String
 
-  phone String?
+  phone   String?
   address String?
-  avatar String?
+  avatar  String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -32,18 +32,18 @@ model User {
 }
 
 model Agency {
-  id        Int      @id @default(autoincrement())
-  name String
-  mobile String
-  phone String?
+  id      Int     @id @default(autoincrement())
+  name    String
+  mobile  String
+  phone   String?
   address String?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
 
-  owners Employee[]
+  owners    Employee[]
   employees Owner[]
-  tenants Tenant[]
+  tenants   Tenant[]
 
   @@map("agencies")
 }
@@ -52,7 +52,7 @@ model Owner {
   user_id Int @unique
 
   agency_id Int
-  agency Agency @relation(fields: [agency_id], references: [id])
+  agency    Agency @relation(fields: [agency_id], references: [id])
 
   @@map("owners")
 }
@@ -61,7 +61,7 @@ model Employee {
   user_id Int @unique
 
   agency_id Int
-  agency Agency @relation(fields: [agency_id], references: [id])
+  agency    Agency @relation(fields: [agency_id], references: [id])
 
   @@map("employees")
 }
@@ -70,27 +70,27 @@ model Tenant {
   user_id Int @unique
 
   agency_id Int
-  agency Agency @relation(fields: [agency_id], references: [id])
+  agency    Agency @relation(fields: [agency_id], references: [id])
 
   @@map("tenants")
 }
 
 model Property {
-  id        Int      @id @default(autoincrement())
-  name String
-  type String
+  id          Int    @id @default(autoincrement())
+  name        String
+  type        String
   description String
 
-  owner_id Int?
+  owner_id  Int?
   tenant_id Int?
-  
+
   monthly_cost Decimal?
 
   rent_deposit Int @default(3)
   rent_advance Int @default(1)
 
   address String?
-  photo String?
+  photo   String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

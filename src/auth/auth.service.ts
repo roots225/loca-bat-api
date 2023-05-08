@@ -44,8 +44,12 @@ export class AuthService {
         user,
         ...(await this.signToken(user.id, user.email)),
       };
-    } catch (err) {
-      throw new InternalServerErrorException(err.message);
+    } catch (error) {
+      if (error instanceof ForbiddenException) {
+        throw new ForbiddenException('Credentials incorrect');
+      }
+
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -72,8 +76,10 @@ export class AuthService {
         ...(await this.signToken(user.id, user.email)),
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (
+        error instanceof PrismaClientKnownRequestError ||
+        error.code == 'P2002'
+      ) {
         throw new ForbiddenException('Credentials taken');
       }
       throw error;
@@ -93,7 +99,7 @@ export class AuthService {
 
     const token = await this.jwt.signAsync(payload, {
       secret,
-      expiresIn: '5m',
+      expiresIn: '300m',
     });
 
     return {

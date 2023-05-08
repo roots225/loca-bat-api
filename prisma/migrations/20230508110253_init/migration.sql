@@ -1,8 +1,8 @@
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
-    "firstName" TEXT,
-    "lastName" TEXT,
+    "firstname" TEXT,
+    "lastname" TEXT,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" TEXT NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE "agencies" (
     "phone" TEXT,
     "address" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3),
 
     CONSTRAINT "agencies_pkey" PRIMARY KEY ("id")
 );
