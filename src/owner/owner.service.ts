@@ -1,7 +1,10 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
-import { addOwnerDto, getByIdDto } from './dto';
+import { addOwnerDto } from './dto';
+import { Injectable } from '@nestjs/common';
+import { integerIDDto } from 'src/dto';
 
+@Injectable()
 export class OwnerService {
   constructor(private prisma: PrismaService) {}
 
@@ -10,9 +13,13 @@ export class OwnerService {
       const owners = await this.prisma.owner.findMany({
         skip: 0,
         take: 10,
+        include: {
+          user: true,
+        },
       });
 
       return {
+        success: true,
         data: owners,
       };
     } catch (error) {
@@ -46,7 +53,13 @@ export class OwnerService {
         },
       });
 
-      return { data: owner };
+      return {
+        success: true,
+        data: {
+          ...user,
+          ...owner,
+        },
+      };
     } catch (error) {
       return {
         error,
@@ -56,7 +69,7 @@ export class OwnerService {
     }
   }
 
-  async delete(dto: getByIdDto) {
+  async delete(dto: integerIDDto) {
     try {
       const owner = await this.prisma.owner.delete({
         where: {
@@ -71,6 +84,7 @@ export class OwnerService {
       });
 
       return {
+        success: true,
         data: owner,
       };
     } catch (error) {

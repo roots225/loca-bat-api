@@ -24,16 +24,6 @@ export class addOwnerDto extends addUserDto {
     description: '',
   })
   @Type(() => Number)
-  agency_id: number;
-}
-
-export class getByIdDto {
-  @IsInt()
   @IsNotEmpty()
-  @ApiProperty({
-    example: '',
-    description: '',
-  })
-  @Type(() => Number)
-  id: number;
+  agency_id: number;
 }

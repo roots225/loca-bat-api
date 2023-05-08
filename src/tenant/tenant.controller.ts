@@ -1,8 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { TenantService } from './tenant.service';
-import { ApiTags } from '@nestjs/swagger';
-import { addTenantDto, getByIdDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { addTenantDto, addTenantPropertyDto, getByIdDto } from './dto';
+import { JwtGuard } from 'src/auth/guard';
 
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
 @ApiTags('tenants')
 @Controller('tenants')
 export class TenantController {
@@ -22,6 +33,16 @@ export class TenantController {
   getOneOwner(@Param() dto: getByIdDto) {
     return { dto };
     return this.tenantService.delete(dto);
+  }
+
+  @Get(':id/properties')
+  getTenantProperties(@Param() dto: getByIdDto) {
+    return this.tenantService.getTenantProperties(dto);
+  }
+
+  @Post(':id/property')
+  storeTenantProperty(@Body() dto: addTenantPropertyDto) {
+    return this.tenantService.addProperty(dto);
   }
 
   @Delete(':id')

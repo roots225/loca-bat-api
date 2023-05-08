@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AgencyModule } from './agency/agency.module';
 import { OwnerModule } from './owner/owner.module';
 import { TenantModule } from './tenant/tenant.module';
+import { PropertyModule } from './property/property.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TenantModule } from './tenant/tenant.module';
     AgencyModule,
     OwnerModule,
     TenantModule,
+    PropertyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

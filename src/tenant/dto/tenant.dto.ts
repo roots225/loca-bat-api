@@ -6,7 +6,7 @@ import { addUserDto } from 'src/user/dto';
 export class addTenantDto extends addUserDto {
   @ApiProperty({
     example: 'tenant',
-    description: 'user role can be admin, employee, owner, tenant',
+    description: '',
   })
   @IsString()
   role: string;
@@ -23,6 +23,7 @@ export class addTenantDto extends addUserDto {
     example: '',
     description: '',
   })
+  @IsNotEmpty()
   @Type(() => Number)
   agency_id: number;
 }
@@ -36,4 +37,39 @@ export class getByIdDto {
   })
   @Type(() => Number)
   id: number;
+}
+
+export class addTenantPropertyDto {
+  @ApiProperty({
+    example: '9',
+    description: '',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  @Type(() => Number)
+  tenant_id: number;
+
+  @ApiProperty({
+    example: '2',
+    description: '',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  @Type(() => Number)
+  property_id: number;
+
+  @ApiProperty({
+    example: '2023-03-12',
+    description: '',
+  })
+  @IsNotEmpty()
+  @Type(() => Date)
+  enter_date: string;
+
+  @ApiProperty({
+    example: '2023-03-12',
+    description: '',
+  })
+  @Type(() => Date)
+  leave_date: string;
 }

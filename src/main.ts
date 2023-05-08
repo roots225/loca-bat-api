@@ -18,6 +18,7 @@ async function bootstrap() {
     .setDescription('Location batiment api')
     .setVersion('1.0')
     .addTag('batiments')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);

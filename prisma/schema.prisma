@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -25,6 +25,9 @@ model User {
   address String?
   avatar  String?
 
+  owners    Owner[]
+  tenants   Tenant[]
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -41,8 +44,8 @@ model Agency {
   created_at DateTime  @default(now())
   updated_at DateTime? @updatedAt
 
-  owners    Employee[]
-  employees Owner[]
+  owners    Owner[]
+  employees Employee[]
   tenants   Tenant[]
 
   @@map("agencies")
@@ -50,8 +53,9 @@ model Agency {
 
 model Owner {
   user_id Int @unique
+  user User @relation(fields: [user_id], references: [id])
 
-  agency_id Int
+  agency_id Int @default(0)
   agency    Agency @relation(fields: [agency_id], references: [id])
 
   @@map("owners")
@@ -68,6 +72,9 @@ model Employee {
 
 model Tenant {
   user_id Int @unique
+  user User @relation(fields: [user_id], references: [id])
+
+  properties TenantProperty[]
 
   agency_id Int
   agency    Agency @relation(fields: [agency_id], references: [id])
@@ -89,6 +96,8 @@ model Property {
   rent_deposit Int @default(3)
   rent_advance Int @default(1)
 
+  day_of_rent String?
+
   address String?
   photo   String?
 
@@ -96,4 +105,82 @@ model Property {
   updated_at DateTime @updatedAt
 
   @@map("properties")
+}
+
+model OwnerProperty {
+  id Int @id @default(autoincrement())
+  owner_id Int
+  property_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("owner_properties")
+}
+
+model TenantProperty {
+  id Int @id @default(autoincrement())
+  tenant_id Int
+  tenant Tenant @relation(fields: [tenant_id], references: [user_id])
+
+  property_id Int
+
+  enter_date DateTime
+  leave_date DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("tenant_properties")
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  amount Decimal
+  status String
+
+  tenant_id Int
+  property_id Int
+  start_period DateTime
+  end_period DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("payments")
+}
+
+model OwnerWithdraw {
+  id Int @id @default(autoincrement())
+  amount Decimal
+  status String
+
+  owner_id Int
+  property_id Int
+  start_period DateTime
+  end_period DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("owner_withdraw")
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  amount Decimal
+  status String
+  type String
+
+  property_id Int
+
+  start_period DateTime
+  end_period DateTime
+
+  payment_method String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("transactions")
 }

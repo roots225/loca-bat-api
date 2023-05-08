@@ -14,9 +14,10 @@ import {
   deleteAgencyDto,
   getOneAgencyDto,
 } from './dto/agency.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('agencies')
+@ApiBearerAuth()
 @UseGuards(JwtGuard)
 @Controller('agencies')
 export class AgencyController {
@@ -37,8 +38,8 @@ export class AgencyController {
     return this.agencyService.store(dto);
   }
 
-  @Delete()
-  delete(@Body() dto: deleteAgencyDto) {
+  @Delete(':id')
+  delete(@Param() dto: deleteAgencyDto) {
     return this.agencyService.delete(dto);
   }
 }
