@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { OwnerService } from './owner.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { addOwnerDto } from './dto';
+import { addOwnerDto, addOwnerPropertyDto } from './dto';
 import { JwtGuard } from 'src/auth/guard';
 import { integerIDDto } from 'src/dto';
 
@@ -34,6 +34,16 @@ export class OwnerController {
   getOneOwner(@Param() dto: integerIDDto) {
     return { dto };
     return this.ownerService.delete(dto);
+  }
+
+  @Get(':id/properties')
+  getOwnerProperties(@Param() dto: integerIDDto) {
+    return this.ownerService.getOwnerProperties(dto);
+  }
+
+  @Post(':id/property')
+  storeOwnerProperty(@Body() dto: addOwnerPropertyDto) {
+    return this.ownerService.addProperty(dto);
   }
 
   @Delete(':id')

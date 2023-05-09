@@ -1,6 +1,6 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
-import { addOwnerDto } from './dto';
+import { addOwnerDto, addOwnerPropertyDto } from './dto';
 import { Injectable } from '@nestjs/common';
 import { integerIDDto } from 'src/dto';
 
@@ -28,6 +28,27 @@ export class OwnerService {
         error,
         message: error.message,
       };
+      throw error;
+    }
+  }
+
+  async getOwnerProperties(dto: integerIDDto) {
+    try {
+      const owners = await this.prisma.ownerProperty.findMany({
+        where: {
+          owner_id: dto.id,
+        },
+        include: {
+          owner: true,
+          property: true,
+        },
+      });
+
+      return {
+        success: true,
+        data: owners,
+      };
+    } catch (error) {
       throw error;
     }
   }
@@ -61,10 +82,24 @@ export class OwnerService {
         },
       };
     } catch (error) {
+      throw error;
+    }
+  }
+
+  async addProperty(dto: addOwnerPropertyDto) {
+    try {
+      const data = await this.prisma.ownerProperty.create({
+        data: {
+          owner_id: dto.owner_id,
+          property_id: dto.property_id,
+        },
+      });
+
       return {
-        error,
-        message: error.message,
+        success: true,
+        data,
       };
+    } catch (error) {
       throw error;
     }
   }

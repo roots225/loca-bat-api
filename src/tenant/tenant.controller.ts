@@ -9,7 +9,12 @@ import {
 } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { addTenantDto, addTenantPropertyDto, getByIdDto } from './dto';
+import {
+  addTenantDto,
+  addTenantPropertyDto,
+  getByIdDto,
+  processPaymentDto,
+} from './dto';
 import { JwtGuard } from 'src/auth/guard';
 
 @ApiBearerAuth()
@@ -38,6 +43,16 @@ export class TenantController {
   @Get(':id/properties')
   getTenantProperties(@Param() dto: getByIdDto) {
     return this.tenantService.getTenantProperties(dto);
+  }
+
+  @Get(':id/payments')
+  getPayments(@Param() dto: getByIdDto) {
+    return this.tenantService.getPayments(dto);
+  }
+
+  @Post('process-payment')
+  processPayment(@Body() dto: processPaymentDto) {
+    return this.tenantService.processPayment(dto);
   }
 
   @Post(':id/property')

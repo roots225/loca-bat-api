@@ -21,7 +21,7 @@ export class PropertyController {
   constructor(private propertyService: PropertyService) {}
 
   @Get()
-  getAll() {
+  findAll() {
     return this.propertyService.getAll();
   }
 
@@ -36,7 +36,7 @@ export class PropertyController {
   }
 
   @Delete(':id')
-  delete(@Param() dto: integerIDDto) {
+  remove(@Param() dto: integerIDDto) {
     return this.propertyService.delete(dto);
   }
 }

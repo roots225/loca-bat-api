@@ -58,6 +58,8 @@ model Owner {
   agency_id Int @default(0)
   agency    Agency @relation(fields: [agency_id], references: [id])
 
+  properties OwnerProperty[]
+
   @@map("owners")
 }
 
@@ -104,13 +106,19 @@ model Property {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  tenants TenantProperty[]
+  owners OwnerProperty[]
+
   @@map("properties")
 }
 
 model OwnerProperty {
   id Int @id @default(autoincrement())
   owner_id Int
+  owner Owner @relation(fields: [owner_id], references: [user_id])
+
   property_id Int
+  property Property @relation(fields: [property_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -124,6 +132,7 @@ model TenantProperty {
   tenant Tenant @relation(fields: [tenant_id], references: [user_id])
 
   property_id Int
+  property Property @relation(fields: [property_id], references: [id])
 
   enter_date DateTime
   leave_date DateTime?
@@ -146,6 +155,8 @@ model Payment {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  transactions Transaction[]
 
   @@map("payments")
 }
@@ -178,6 +189,9 @@ model Transaction {
   end_period DateTime
 
   payment_method String
+
+  payment_id Int
+  payment Payment @relation(fields: [payment_id], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

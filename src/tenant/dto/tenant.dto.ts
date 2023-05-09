@@ -73,3 +73,17 @@ export class addTenantPropertyDto {
   @Type(() => Date)
   leave_date: string;
 }
+
+export class processPaymentDto {
+  @IsInt()
+  @IsNotEmpty()
+  @ApiProperty()
+  @Type(() => Number)
+  property_id: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  @ApiProperty()
+  @Type(() => Number)
+  payment_id: number;
+}

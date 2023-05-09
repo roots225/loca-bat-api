@@ -1,6 +1,11 @@
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
-import { addTenantDto, addTenantPropertyDto, getByIdDto } from './dto';
+import {
+  addTenantDto,
+  addTenantPropertyDto,
+  getByIdDto,
+  processPaymentDto,
+} from './dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -97,6 +102,65 @@ export class TenantService {
       return {
         success: true,
         data: tenant,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getPayments(dto: getByIdDto) {
+    try {
+      const tenant = await this.prisma.payment.findMany({
+        where: {
+          tenant_id: dto.id,
+        },
+        include: {
+          transactions: true,
+        },
+      });
+
+      return {
+        success: true,
+        data: tenant,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async processPayment(dto: processPaymentDto) {
+    try {
+      const trx = {
+        amount: 100000,
+        status: 'CREATED',
+        type: 'CREDIT',
+
+        property_id: dto.property_id,
+
+        start_period: '',
+        end_period: '',
+
+        payment_method: 'OM',
+
+        payment_id: dto.payment_id,
+      };
+
+      const transaction = await this.prisma.transaction.create({
+        data: trx,
+      });
+
+      const payment = await this.prisma.payment.update({
+        where: {
+          id: dto.payment_id,
+        },
+        data: {
+          status: 'PAID',
+        },
+      });
+
+      return {
+        success: true,
+        data: { payment, transaction },
       };
     } catch (error) {
       throw error;

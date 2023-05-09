@@ -9,6 +9,8 @@ import { AgencyModule } from './agency/agency.module';
 import { OwnerModule } from './owner/owner.module';
 import { TenantModule } from './tenant/tenant.module';
 import { PropertyModule } from './property/property.module';
+import { PaymentModule } from './payment/payment.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { PropertyModule } from './property/property.module';
     OwnerModule,
     TenantModule,
     PropertyModule,
+    PaymentModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

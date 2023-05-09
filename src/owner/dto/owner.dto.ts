@@ -27,3 +27,23 @@ export class addOwnerDto extends addUserDto {
   @IsNotEmpty()
   agency_id: number;
 }
+
+export class addOwnerPropertyDto {
+  @ApiProperty({
+    example: '',
+    description: '',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  @Type(() => Number)
+  owner_id: number;
+
+  @ApiProperty({
+    example: '',
+    description: '',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  @Type(() => Number)
+  property_id: number;
+}
