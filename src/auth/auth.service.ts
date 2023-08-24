@@ -9,6 +9,8 @@ import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
+import { successResponse } from 'src/common/serializers/responses/http.response';
 
 @Injectable()
 export class AuthService {
@@ -40,16 +42,21 @@ export class AuthService {
       // remove password
       delete user.password;
 
-      return {
+      return successResponse({
         user,
         ...(await this.signToken(user.id, user.email)),
-      };
+      });
     } catch (error) {
       if (error instanceof ForbiddenException) {
         throw new ForbiddenException('Credentials incorrect');
       }
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2021') {
+          throw new ForbiddenException('Credentials incorrect: users table not found.');
+        }
+      }
 
-      throw new InternalServerErrorException(error.message);
+      throw new ForbiddenException('Credentials incorrect');
     }
   }
 
@@ -71,10 +78,10 @@ export class AuthService {
       delete user.password;
 
       //return the user and token
-      return {
+      return successResponse({
         user,
         ...(await this.signToken(user.id, user.email)),
-      };
+      });
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError ||

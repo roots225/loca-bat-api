@@ -12,7 +12,7 @@ async function bootstrap() {
     }),
   );
 
-  // app.enableCors();
+  app.enableCors();
 
   /// Swagger documentation configuration
   const config = new DocumentBuilder()
