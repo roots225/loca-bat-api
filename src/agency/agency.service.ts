@@ -11,6 +11,7 @@ import {
   getOneAgencyDto,
 } from './dto/agency.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { successResponse } from 'src/common/serializers/responses/http.response';
 
 @Injectable()
 export class AgencyService {
@@ -23,9 +24,7 @@ export class AgencyService {
         take: 10,
       });
 
-      return {
-        data: agencies,
-      };
+      return successResponse(agencies);
     } catch (error) {}
     return {
       data: [],
@@ -40,9 +39,7 @@ export class AgencyService {
         },
       });
 
-      return {
-        data: agency,
-      };
+      return successResponse(agency);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         throw new NotFoundException('agency not found');
@@ -58,7 +55,7 @@ export class AgencyService {
         data: dto,
       });
 
-      return { data: agency };
+      return successResponse(agency, "L'agence a bien été ajoutée.");
     } catch (error) {
       throw new ServiceUnavailableException(error.message);
     }
@@ -72,7 +69,7 @@ export class AgencyService {
         },
       });
 
-      return { data: agency };
+      return successResponse(agency, "L'agence a bien été supprimée.");
     } catch (error) {
       throw new ServiceUnavailableException(error.message);
     }

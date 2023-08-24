@@ -1,7 +1,8 @@
-export function successResponse(data: any) {
+export function successResponse(data: any, message: string = "") {
     return {
         code: 200,
         status: 'success',
+        message,
         data,
     }
 }
